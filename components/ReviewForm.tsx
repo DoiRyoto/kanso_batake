@@ -19,6 +19,7 @@ import { setReview } from "@/actions/review.action"
 import { reviewType } from "@/constants"
 import { useRef } from "react"
 import { Loader2 } from "lucide-react"
+import CalcelCreateReview from "./CancelCreateReview"
 
 const FormSchema = z.object({
   PaperTitle: z.string().min(2, {
@@ -111,7 +112,10 @@ export function ReviewForm() {
               Please wait
             </Button>
             ) : (
-              <Button type="submit" >Submit</Button>
+              <div className="flex flex-row gap-3">
+                <Button type="submit" >Submit</Button>
+                <CalcelCreateReview />
+              </div>
             )
         }
       </form>
