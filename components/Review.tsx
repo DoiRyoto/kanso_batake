@@ -3,30 +3,28 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
-
+import { cn } from '@/lib/utils'
 
 const Review = (
-	{ id, paperTitle, contents }: { id: string, paperTitle: string, contents: string }
+	{ id, paperTitle, contents, reviewerName }: { id: string, paperTitle: string, contents: string, reviewerName: string }
 ) => {
 	return (
-		<>
-			<Card key={id}>
+			<Card>
 				<CardHeader>
-					<CardTitle>
+					<CardTitle className="tru">
 						{paperTitle}
 					</CardTitle>
+					<CardDescription>
+						Reviewer: {reviewerName}
+					</CardDescription>
 				</CardHeader>
-				<CardContent>
-					<text>
+				<CardContent className='break-words'>
 						{contents}
-					</text>
 				</CardContent>
 			</Card>
-		</>
 	)
 }
 

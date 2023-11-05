@@ -4,10 +4,11 @@ type paperInterface = {
     tldr: string;
 }
 
-type reviewInterface = {
+export type reviewType = {
     id: string;
     contents: string;
-    paperId: string;
+    paperTitle: string;
+    reviewerName: string;
 }
 
 export const paperData: paperInterface[] = [
@@ -23,15 +24,29 @@ export const paperData: paperInterface[] = [
     }
 ]
 
-export const reviewData: reviewInterface[] = [
+export const reviewData: reviewType[] = [
     {
         id: "1",
         contents: "さいこう",
-        paperId: "1"
+        paperTitle: "How to use Python",
+        reviewerName:"三浦隼"
     },
     {
         id: "2",
+        contents: "イマイチ",
+        paperTitle: "How to use Python",
+        reviewerName:"土居亮斗"
+    },
+    {
+        id: "3",
         contents: "いいね",
-        paperId: "1"
+        paperTitle: "How to use TypeScript",
+        reviewerName:"三浦隼"
+    },
+    {
+        id: "4",
+        contents: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        paperTitle: "How to use TypeScript??????????????????????????????????????????????????????????????????????????????????????????????????????",
+        reviewerName:"三浦隼"
     }
 ]
