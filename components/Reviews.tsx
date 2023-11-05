@@ -4,6 +4,7 @@ import Review from './Review'
 
 const Reviews = async () => {
 	const reviewsData = await getAllReviews()
+	
   return (
     <div className="flex flex-col gap-2">
 			{

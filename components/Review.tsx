@@ -6,7 +6,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
-import { cn } from '@/lib/utils'
 
 const Review = (
 	{ id, paperTitle, contents, reviewerName }: { id: string, paperTitle: string, contents: string, reviewerName: string }
@@ -21,7 +20,7 @@ const Review = (
 						Reviewer: {reviewerName}
 					</CardDescription>
 				</CardHeader>
-				<CardContent className='break-words'>
+				<CardContent className='break-words whitespace-pre-line'>
 						{contents}
 				</CardContent>
 			</Card>

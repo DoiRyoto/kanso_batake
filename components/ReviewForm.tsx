@@ -17,8 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "./ui/textarea"
 import { setReview } from "@/actions/review.action"
 import { reviewType } from "@/constants"
-import { useRef, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRef } from "react"
 import { Loader2 } from "lucide-react"
 
 const FormSchema = z.object({
@@ -35,7 +34,6 @@ const FormSchema = z.object({
 
 export function ReviewForm() {
   const isLoading = useRef(false)
-  const router = useRouter()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -61,8 +59,6 @@ export function ReviewForm() {
     } catch (error) {
       console.log(error)
     }
-
-    router.push("/")
   }
 
   return (
