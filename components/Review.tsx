@@ -13,7 +13,7 @@ const Review = (
 	return (
 			<Card>
 				<CardHeader>
-					<CardTitle className="tru">
+					<CardTitle className="truncate">
 						{paperTitle}
 					</CardTitle>
 					<CardDescription>
