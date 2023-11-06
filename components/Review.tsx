@@ -13,7 +13,7 @@ const Review = (
 	return (
 			<Card>
 				<CardHeader>
-					<CardTitle className="truncate">
+					<CardTitle className="truncate leading-normal">
 						{paperTitle}
 					</CardTitle>
 					<CardDescription>
