@@ -11,6 +11,16 @@ export type reviewType = {
     reviewerName: string;
 }
 
+export type userType = {
+    id: string;
+    name: string;
+    affiliation: string[];
+    field: string[];
+    role: string;
+    // いったん　Student or Teacher
+    reviews: reviewType[];
+}
+
 export const paperData: paperInterface[] = [
     {
         id: "1",
@@ -50,3 +60,22 @@ export const reviewData: reviewType[] = [
         reviewerName:"三浦隼"
     }
 ]
+
+export const miuraData: userType = {
+    id: "1",
+    name: "miura",
+    affiliation: ["適応情報処理研究室", "情報理工学位プログラム"],
+    field: ["Machine Learning", "Deep Learning"],
+    role: "Student",
+    reviews: [{
+        id: "1",
+        contents: "さいこう",
+        paperTitle: "How to use Python",
+        reviewerName:"三浦隼"
+    },{
+        id: "3",
+        contents: "いいね",
+        paperTitle: "How to use TypeScript",
+        reviewerName:"三浦隼"
+    }]
+}

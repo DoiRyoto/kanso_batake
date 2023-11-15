@@ -6,6 +6,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
+import Link from 'next/link'
 
 const Review = (
 	{ id, paperTitle, contents, reviewerName }: { id: string, paperTitle: string, contents: string, reviewerName: string }
@@ -17,7 +18,7 @@ const Review = (
 						{paperTitle}
 					</CardTitle>
 					<CardDescription>
-						Reviewer: {reviewerName}
+						<Link href="/user"> Reviewer: {reviewerName}</Link>
 					</CardDescription>
 				</CardHeader>
 				<CardContent className='break-words whitespace-pre-line'>
