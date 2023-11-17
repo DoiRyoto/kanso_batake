@@ -2,7 +2,7 @@
 
 import { collection, getDocs, setDoc, doc, query, orderBy } from "firebase/firestore"
 import db from "@/lib/firebase/store"
-import { reviewType } from "@/constants"
+import { miuraData, reviewType, userType } from "@/constants"
 import { revalidatePath, unstable_noStore } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -25,4 +25,12 @@ export async function setReview(reviewData: reviewType) {
 
     revalidatePath('/create');
     redirect("/")
+}
+
+export async function fetchReviewsByUser(userId: string) {
+    unstable_noStore();
+    // const user = await fetchUserData(userId)
+    const user: userType = miuraData
+
+    return user.reviews
 }

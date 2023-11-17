@@ -9,7 +9,7 @@ import {
 import Link from 'next/link'
 
 const Review = (
-	{ id, paperTitle, contents, reviewerName }: { id: string, paperTitle: string, contents: string, reviewerName: string }
+	{ id, paperTitle, contents, reviewerName, userId }: { id: string, paperTitle: string, contents: string, reviewerName: string, userId: string }
 ) => {
 	return (
 			<Card>
@@ -18,7 +18,7 @@ const Review = (
 						{paperTitle}
 					</CardTitle>
 					<CardDescription>
-						<Link href="/user"> Reviewer: {reviewerName}</Link>
+						<Link href={`/user/${userId}`}> Reviewer: {reviewerName}</Link>
 					</CardDescription>
 				</CardHeader>
 				<CardContent className='break-words whitespace-pre-line'>

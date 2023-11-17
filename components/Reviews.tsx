@@ -10,7 +10,7 @@ const Reviews = async () => {
 			{
 				reviewsData.map((review) => {
 					return (
-						<Review key={review.id} id={review.id} paperTitle={review.paperTitle} contents={review.contents} reviewerName={review.reviewerName} />
+						<Review key={review.id} id={review.id} paperTitle={review.paperTitle} contents={review.contents} reviewerName={review.reviewerName} userId="1"/>
 					)
 				})
 			}
