@@ -25,22 +25,18 @@ const FormSchema = z.object({
   PaperTitle: z.string().min(2, {
     message: "PaperTitle must be at least 2 characters.",
   }),
-  ReviewerName: z.string().min(2, {
-    message: "ReviewerName must be at least 2 characters.",
-  }),
   ReviewContents: z.string().min(2, {
     message: "ReviewContents must be at least 2 characters.",
   }),
 })
 
-export function ReviewForm() {
+export function ReviewForm({ userId, userName} : { userId: string , userName: string}) {
   const isLoading = useRef(false)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       PaperTitle: "",
-      ReviewerName: "",
       ReviewContents: ""
     },
   })
@@ -52,11 +48,12 @@ export function ReviewForm() {
       id: Date.now().toString(),
       contents: data.ReviewContents,
       paperTitle: data.PaperTitle,
-      reviewerName: data.ReviewerName
+      reviewerName: userName,
+      createdBy: userId
     }
 
     try {
-      await setReview(reviewData)
+      await setReview(userId, reviewData)
     } catch (error) {
       console.log(error)
     }
@@ -78,19 +75,7 @@ export function ReviewForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="ReviewerName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>投稿者(あなたの名前)</FormLabel>
-              <FormControl>
-                <Input placeholder="投稿者の名前を入力してください。" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        
         <FormField
           control={form.control}
           name="ReviewContents"

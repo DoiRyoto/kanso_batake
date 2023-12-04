@@ -6,7 +6,7 @@ const page = async(
   { params: { userId } } : { params : { userId: string }}
 ) => {
   return (
-    <div>
+    <div className='flex flex-col gap-5'>
       <ReviewHeader userId={userId}/>
       <ReviewsByUser userId={userId} />
     </div>
