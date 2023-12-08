@@ -10,13 +10,22 @@ export type reviewType = {
     paperTitle: string;
     reviewerName: string;
     createdBy: string;
+    venue:string;
+    year:string;
+    journal_name:string;
+    journal_pages:string;
+    journal_vol:string;
+    authors:string;
+    doi:string;
+    link:string;
 }
 
-export type postType = {
-    id: string;
-    contents: string;
-    paperTitle: string;
-}
+// 現在使用してい以内
+// export type postType = {
+//     id: string;
+//     contents: string;
+//     paperTitle: string;
+// }
 
 export type userType = {
     id: string;

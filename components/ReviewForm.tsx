@@ -25,6 +25,30 @@ const FormSchema = z.object({
   PaperTitle: z.string().min(2, {
     message: "PaperTitle must be at least 2 characters.",
   }),
+  venue: z.string().min(0, {
+    message: "venue must be at least 0 characters.",
+  }),
+  year: z.string().min(2, {
+    message: "year must be at least 2 characters.",
+  }),
+  journal_name: z.string().min(0, {
+    message: "journal name must be at least 0 characters.",
+  }),
+  journal_pages: z.string().min(0, {
+    message: "journal pages must be at least 0 characters.",
+  }),
+  journal_vol: z.string().min(0, {
+    message: "journal volume must be at least 0 characters.",
+  }),
+  authors: z.string().min(1, {
+    message: "authors must be at least 1 characters.",
+  }),
+  doi: z.string().min(0, {
+    message: "doi must be at least 0 characters.",
+  }),
+  link: z.string().min(0, {
+    message: "link must be at least 0 characters.",
+  }),
   ReviewContents: z.string().min(2, {
     message: "ReviewContents must be at least 2 characters.",
   }),
@@ -37,7 +61,15 @@ export function ReviewForm({ userId, userName} : { userId: string , userName: st
     resolver: zodResolver(FormSchema),
     defaultValues: {
       PaperTitle: "",
-      ReviewContents: ""
+      ReviewContents: "",
+      venue:"",
+      year:"",
+      journal_name:"",
+      journal_pages:"",
+      journal_vol:"",
+      authors:"",
+      doi:"",
+      link:"",
     },
   })
 
@@ -48,6 +80,14 @@ export function ReviewForm({ userId, userName} : { userId: string , userName: st
       id: Date.now().toString(),
       contents: data.ReviewContents,
       paperTitle: data.PaperTitle,
+      venue:data.venue,
+      year:data.year,
+      journal_name:data.journal_name,
+      journal_pages:data.journal_pages,
+      journal_vol:data.journal_vol,
+      authors:data.authors,
+      doi:data.doi,
+      link:data.link,
       reviewerName: userName,
       createdBy: userId
     }
@@ -70,6 +110,118 @@ export function ReviewForm({ userId, userName} : { userId: string , userName: st
               <FormLabel>論文名</FormLabel>
               <FormControl>
                 <Input placeholder="論文のタイトルを入力してください。" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+      <FormField
+          control={form.control}
+          name="venue"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>学術会議の名前</FormLabel>
+              <FormControl>
+                <Input placeholder="会議名を入力してください。" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      
+      <FormField
+          control={form.control}
+          name="year"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>発表年</FormLabel>
+              <FormControl>
+                <Input placeholder="発表された年を入力してください。" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="journal_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>雑誌名</FormLabel>
+              <FormControl>
+                <Input placeholder="雑誌名を入力してください。" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="journal_pages"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ページ</FormLabel>
+              <FormControl>
+                <Input placeholder="雑誌でのページを入力してください。" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="journal_vol"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>ページ</FormLabel>
+              <FormControl>
+                <Input placeholder="雑誌での巻数を入力してください。" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="authors"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>著者名</FormLabel>
+              <FormControl>
+                <Input placeholder="著者名を入力してください。" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="doi"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>DOI</FormLabel>
+              <FormControl>
+                <Input placeholder="DOIを入力してください。" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="link"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>URL</FormLabel>
+              <FormControl>
+                <Input placeholder="URLを入力してください。" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
