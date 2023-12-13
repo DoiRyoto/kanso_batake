@@ -18,6 +18,7 @@ export type reviewType = {
     authors:string;
     doi:string;
     link:string;
+    tags: string[];
 }
 
 // 現在使用してい以内
