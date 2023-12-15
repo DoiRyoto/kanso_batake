@@ -3,7 +3,6 @@ import React from "react";
 import Review from "./Review";
 
 const Reviews = async ({ tag } : { tag?: string }) => {
-	console.log(tag)
   const reviewsData = !tag ? await getAllReviews() : await fetchReviewsByTag(tag);
 
   return (

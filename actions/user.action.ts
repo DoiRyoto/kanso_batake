@@ -3,8 +3,6 @@
 import { userType } from "@/constants";
 import db from "@/lib/firebase/store";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { revalidatePath, unstable_noStore } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function fetchUser(userId: string){
   try {

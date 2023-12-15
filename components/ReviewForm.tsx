@@ -27,6 +27,7 @@ const FormSchema = z.object({
   // 各フィールドにバリデーションルールを設定
   PaperTitle: z.string().min(2, {
     message: "PaperTitle must be at least 2 characters.",// 論文タイトルは最低2文字必要
+
   }),
   venue: z.string().min(0, {
     message: "venue must be at least 0 characters.",// 会場名は最低0文字（空でも可）
@@ -127,10 +128,63 @@ export function ReviewForm({
           name="PaperTitle"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>論文名</FormLabel>
+              <FormLabel className="flex flex-row gap-1">
+                論文名
+                <p className="text-red-600">*</p></FormLabel>
               <FormControl>
                 <Input
                   placeholder="論文のタイトルを入力してください。"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="authors"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex flex-row gap-1">
+                著者名<p className="text-red-600">*</p></FormLabel>
+              <FormControl>
+                <Input placeholder="著者名を入力してください。" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="year"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex flex-row gap-1">発表年<p className="text-red-600">*</p></FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="発表された年を入力してください。"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="ReviewContents"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex flex-row gap-1">レビュー<p className="text-red-600">*</p></FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="論文のレビューを入力してください。"
+                  id="message"
+                  rows={10}
                   {...field}
                 />
               </FormControl>
@@ -147,23 +201,6 @@ export function ReviewForm({
               <FormLabel>学術会議の名前</FormLabel>
               <FormControl>
                 <Input placeholder="会議名を入力してください。" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="year"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>発表年</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="発表された年を入力してください。"
-                  {...field}
-                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -220,20 +257,6 @@ export function ReviewForm({
 
         <FormField
           control={form.control}
-          name="authors"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>著者名</FormLabel>
-              <FormControl>
-                <Input placeholder="著者名を入力してください。" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="doi"
           render={({ field }) => (
             <FormItem>
@@ -274,24 +297,6 @@ export function ReviewForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="ReviewContents"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>レビュー</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="論文のレビューを入力してください。"
-                  id="message"
-                  rows={10}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         {isLoading.current ? (
           <Button disabled>
             <Loader2 className="animate-spin" />

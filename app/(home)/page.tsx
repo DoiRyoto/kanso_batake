@@ -12,7 +12,7 @@ export default async function Home({
 ) {
   return (
     <div className="flex flex-col gap-10 mt-2">
-      <div className="flex flex-row gap-3">
+      <div className="flex flex-row gap-20">
         <Search placeholder="タグを入力"/>
         <ReviewPostButton />
       </div>
