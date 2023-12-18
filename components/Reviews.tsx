@@ -1,9 +1,9 @@
-import { getAllReviews, fetchReviewsByTag } from "@/actions/review.action";
+import { fetchReviewsByFilter } from "@/actions/review.action";
 import React from "react";
 import Review from "./Review";
 
 const Reviews = async ({ tag } : { tag?: string }) => {
-  const reviewsData = !tag ? await getAllReviews() : await fetchReviewsByTag(tag);
+  const reviewsData = await fetchReviewsByFilter(tag)
 
   return (
     <div className="flex flex-col gap-2">
