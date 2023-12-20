@@ -34,6 +34,9 @@ const Header = async () => {
           <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank'>
             お問い合わせはこちら
           </a>
+          <Link href="/lab">
+            研究室一覧
+          </Link>
         </div>
         <div className='flex flex-row gap-3'>
           <Link href={`/user/${user.id}`}>

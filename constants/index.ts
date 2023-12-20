@@ -6,6 +6,8 @@ type paperInterface = {
 
 export type labType ={
     value: string;
+    users: string[];
+    label: string;
 }
 
 
