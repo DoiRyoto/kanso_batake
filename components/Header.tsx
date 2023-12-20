@@ -8,9 +8,14 @@ const Header = async () => {
   if (!_user) return (
     <header className='fixed z-50 w-screen justify-center border-b'>
       <div className='container flex flex-row max-w-5xl justify-between p-5 bg-white dark:bg-black'>
-        <Link href="/">
-          感想畑
-        </Link>
+        <div className='flex flex-row gap-3'>
+          <Link href="/">
+            感想畑
+          </Link>
+          <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank'>
+            お問い合わせはこちら
+          </a>
+        </div>
         <Link href={`/sign-in`}>
           サインイン
         </Link>
@@ -22,9 +27,14 @@ const Header = async () => {
   return (
     <header className='fixed z-50 w-screen justify-center border-b'>
       <div className='container flex flex-row max-w-5xl justify-between p-5 bg-white dark:bg-black'>
-        <Link href="/">
-          感想畑
-        </Link>
+        <div className='flex flex-row gap-3'>
+          <Link href="/">
+            感想畑
+          </Link>
+          <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank'>
+            お問い合わせはこちら
+          </a>
+        </div>
         <div className='flex flex-row gap-3'>
           <Link href={`/user/${user.id}`}>
             マイページ

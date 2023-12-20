@@ -42,7 +42,7 @@ export async function setUser(userData: userType) {
   try {
     await Promise.all([
       setDoc(doc(db, `users/${userData.id}`), userData),
-      setDoc(doc(db, `labs/${userData.affiliation}`), {
+      updateDoc(doc(db, `labs/${userData.affiliation}`), {
         users: arrayUnion(userData.id),
       }),
     ]);
