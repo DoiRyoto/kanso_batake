@@ -13,11 +13,11 @@ const Header = async () => {
           <Link href="/">
             <Image src="/logo2.png" width={60} height={30} alt="logo"/>
           </Link>
-          <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank'>
+          <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank' className="flex items-center justify-center">
             お問い合わせはこちら
           </a>
         </div>
-        <Link href={`/sign-in`}>
+        <Link href={`/sign-in`} className='flex items-center justify-center'>
           サインイン
         </Link>
       </div>
@@ -32,18 +32,18 @@ const Header = async () => {
           <Link href="/">
             <Image src="/logo2.png" width={60} height={30} alt="logo"/>
           </Link>
-          <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank'>
+          <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank' className='flex items-center justify-center'>
             お問い合わせはこちら
           </a>
-          <Link href="/lab">
+          <Link href="/lab" className='flex items-center justify-center'>
             研究室一覧
           </Link>
         </div>
         <div className='flex flex-row gap-3'>
-          <Link href={`/user/${user.id}`}>
+          <Link href={`/user/${user.id}`} className='flex items-center justify-center'>
             マイページ
           </Link>
-          <Link href={`/lab/${user.affiliation}`}>
+          <Link href={`/lab/${user.affiliation}`} className='flex items-center justify-center'>
             マイラボ
           </Link>
           <SignOutButton>
