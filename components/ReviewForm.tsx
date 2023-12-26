@@ -22,6 +22,8 @@ import { useRef } from "react";
 import { Loader2 } from "lucide-react";
 import CalcelCreateReview from "./CancelCreateReview";
 
+import { delEmpty_tag } from "@/lib/utils";
+
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
   // 各フィールドにバリデーションルールを設定
@@ -108,7 +110,7 @@ export function ReviewForm({
       link: data.link,
       reviewerName: userName,
       createdBy: userId,
-      tags: data.Tags.split(","),
+      tags: delEmpty_tag(data.Tags),
     };
 
     try {

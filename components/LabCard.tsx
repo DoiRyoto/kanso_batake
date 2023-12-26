@@ -12,21 +12,24 @@ import { labType } from "@/constants";
 
 const LabCard = ({ labData }: { labData: labType }) => {
   return (
+    <>
+    {labData.users.length > 0 ? (
     <Card>
       <CardHeader>
         <CardTitle className="truncate leading-normal">
-          
-        </CardTitle>
-        <CardDescription>
             <Link  href={`/lab/${labData.value}`}>
             {labData.value}
             </Link>
+        </CardTitle>
+        <CardDescription>     
         </CardDescription>
         <Separator />
       </CardHeader>
       <CardContent className="flex gap-2">
       </CardContent> 
     </Card>
+    ):null}
+    </>
   );
 };
 

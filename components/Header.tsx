@@ -1,5 +1,6 @@
 import { fetchUser } from '@/actions/user.action';
 import { SignOutButton, currentUser } from '@clerk/nextjs';
+import Image from 'next/image';
 import Link from 'next/link'
 import React from 'react'
 
@@ -10,7 +11,7 @@ const Header = async () => {
       <div className='container flex flex-row max-w-5xl justify-between p-5 bg-white dark:bg-black'>
         <div className='flex flex-row gap-3'>
           <Link href="/">
-            感想畑
+            <Image src="/logo2.png" width={60} height={30} alt="logo"/>
           </Link>
           <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank'>
             お問い合わせはこちら
@@ -29,7 +30,7 @@ const Header = async () => {
       <div className='container flex flex-row max-w-5xl justify-between p-5 bg-white dark:bg-black'>
         <div className='flex flex-row gap-3'>
           <Link href="/">
-            感想畑
+            <Image src="/logo2.png" width={60} height={30} alt="logo"/>
           </Link>
           <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank'>
             お問い合わせはこちら
