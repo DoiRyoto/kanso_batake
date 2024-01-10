@@ -17,43 +17,33 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 import { setReview } from "@/actions/review.action";
-import { reviewType } from "@/constants";
-import { useRef } from "react";
+import { paperData, reviewType } from "@/constants";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import CalcelCreateReview from "./CancelCreateReview";
+import { fetchPaperByDOI, paperDetailsType, paperErrorType } from "@/actions/paper.action";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { useDebouncedCallback } from "use-debounce";
+import { cn } from "@/lib/utils";
 
 import { delEmpty_tag } from "@/lib/utils";
 
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
   // 各フィールドにバリデーションルールを設定
-  PaperTitle: z.string().min(2, {
-    message: "PaperTitle must be at least 2 characters.",// 論文タイトルは最低2文字必要
-
-  }),
-  venue: z.string().min(0, {
-    message: "venue must be at least 0 characters.",// 会場名は最低0文字（空でも可）
-  }),
-  year: z.string().min(2, {
-    message: "year must be at least 2 characters.",// 発表年は最低2文字必要
-  }),
-  journal_name: z.string().min(0, {
-    message: "journal name must be at least 0 characters.",// 雑誌名は最低0文字（空でも可）
-  }),
-  journal_pages: z.string().min(0, {
-    message: "journal pages must be at least 0 characters.", // 雑誌のページ数は最低0文字（空でも可）
-  }),
-  journal_vol: z.string().min(0, {
-    message: "journal volume must be at least 0 characters.",// 雑誌の巻数は最低0文字（空でも可）
-  }),
-  authors: z.string().min(1, {
-    message: "authors must be at least 1 characters.",// 著者名は最低1文字必要
-  }),
-  doi: z.string().min(0, {
-    message: "doi must be at least 0 characters.",// DOIは最低0文字（空でも可）
-  }),
-  link: z.string().min(0, {
-    message: "link must be at least 0 characters.",// リンクは最低0文字（空でも可）
+  title: z.string().min(1, {
+    message: "Title Required",// Titleは必須
   }),
   ReviewContents: z.string().min(2, {
     message: "ReviewContents must be at least 2 characters.",// レビュー内容は最低2文字必要
@@ -71,43 +61,41 @@ export function ReviewForm({
   userName: string;
 }) {
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
+  const [paper, setPaper] = useState<paperDetailsType & paperErrorType>()
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),// zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      PaperTitle: "",
       ReviewContents: "",
-      venue: "",
-      year: "",
-      journal_name: "",
-      journal_pages: "",
-      journal_vol: "",
-      authors: "",
-      doi: "",
-      link: "",
+      title: "",
       Tags: "",
     },
   });
 
   // フォーム送信時の処理を定義
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    if(!paper || (paper && paper.error)){
+      alert("不正なDOIです")
+      return
+    }
+
     isLoading.current = true;
 
     // 提出用のレビューデータを準備
     const reviewData: reviewType = {
       id: Date.now().toString(),// レビューIDを現在のタイムスタンプで生成
       contents: data.ReviewContents,
-      paperTitle: data.PaperTitle,
-      venue: data.venue,
-      year: data.year,
-      journal_name: data.journal_name,
-      journal_pages: data.journal_pages,
-      journal_vol: data.journal_vol,
-      authors: data.authors,
-      doi: data.doi,
-      link: data.link,
+      paperTitle: paper.title,
+      venue: paper.venue,
+      year: paper.year,
+      journal_name: paper.journal.name,
+      journal_pages: paper.journal.pages,
+      journal_vol: paper.journal.volume,
+      authors: paper.authors[0].name,
+      doi: paper.externalIds.DOI,
+      link: paper.url,
       reviewerName: userName,
       createdBy: userId,
       tags: delEmpty_tag(data.Tags),
@@ -121,55 +109,46 @@ export function ReviewForm({
     }
   }
 
+  const onChageHandler = useDebouncedCallback(async(e) => {
+    const paperData = await fetchPaperByDOI(e.target.value)
+    form.setValue("title", paperData.title)
+    console.log(paperData)
+    setPaper(paperData)
+  }, 300)
+
   // フォームのレンダリングを行う
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
-        <FormField
+      <FormField
           control={form.control}
-          name="PaperTitle"
+          name="title"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex flex-row gap-1">
-                論文名
-                <p className="text-red-600">*</p></FormLabel>
+                タイトル<p className="text-red-600">*</p></FormLabel>
               <FormControl>
-                <Input
-                  placeholder="論文のタイトルを入力してください。"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="authors"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex flex-row gap-1">
-                著者名<p className="text-red-600">*</p></FormLabel>
-              <FormControl>
-                <Input placeholder="著者名を入力してください。" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="year"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex flex-row gap-1">発表年<p className="text-red-600">*</p></FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="発表された年を入力してください。"
-                  {...field}
-                />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-full justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {form.getValues("title") ? form.getValues("title") : "Search paper by DOI..."}
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[50vw] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search paper by DOI..." onChangeCapture={onChageHandler}/>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -189,96 +168,6 @@ export function ReviewForm({
                   rows={10}
                   {...field}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="venue"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>学術会議の名前</FormLabel>
-              <FormControl>
-                <Input placeholder="会議名を入力してください。" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="journal_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>雑誌名</FormLabel>
-              <FormControl>
-                <Input placeholder="雑誌名を入力してください。" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="journal_pages"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ページ</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="雑誌でのページを入力してください。"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="journal_vol"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>巻数</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="雑誌での巻数を入力してください。"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="doi"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>DOI</FormLabel>
-              <FormControl>
-                <Input placeholder="DOIを入力してください。" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="link"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>URL</FormLabel>
-              <FormControl>
-                <Input placeholder="URLを入力してください。" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
