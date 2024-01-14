@@ -22,7 +22,7 @@ const ReviewsByUser = async ({ userId, tag } : { userId: string, tag?:string }) 
         {
             reviewsData.map((review) => {
                 return (
-                    <Review key={review.id} reviewData={review} />
+                    <Review key={review.id} reviewData={review} userId={userId}/>
                 )
             })
         }

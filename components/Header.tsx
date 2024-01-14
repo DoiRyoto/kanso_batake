@@ -11,7 +11,7 @@ const Header = async () => {
       <div className='container flex flex-row max-w-5xl justify-between p-5 bg-white dark:bg-black'>
         <div className='flex flex-row gap-3'>
           <Link href="/">
-            <Image src="/logo2.png" width={60} height={30} alt="logo"/>
+            <Image src="/logo2.png" width={100} height={50} alt="logo"/>
           </Link>
           <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank' className="flex items-center justify-center">
             お問い合わせはこちら
@@ -30,7 +30,7 @@ const Header = async () => {
       <div className='container flex flex-row max-w-5xl justify-between p-5 bg-white dark:bg-black'>
         <div className='flex flex-row gap-3'>
           <Link href="/">
-            <Image src="/logo2.png" width={60} height={30} alt="logo"/>
+            <Image src="/logo2.png" width={100} height={50} alt="logo"/>
           </Link>
           <a href="https://forms.gle/PrKwapdJXZniqSZs6" target='_blank' className='flex items-center justify-center'>
             お問い合わせはこちら

@@ -28,6 +28,13 @@ export type reviewType = {
   tags: string[];
 };
 
+export type commentType = {
+  id: string;
+  contents: string;
+  userId: string;
+  parentId: string;
+};
+
 // 現在使用してい以内
 // export type postType = {
 //     id: string;
