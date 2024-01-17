@@ -3,15 +3,15 @@
 export type paperDetailsType = {
   title: string;
   year: string;
-  isOpenAccess: boolean;
+  // isOpenAccess: boolean;
   externalIds: {
     DOI: string;
   };
   url: string;
-  openAccessPdf: {
-    url: string;
-    status: string;
-  };
+  // openAccessPdf: {
+  //   url: string;
+  //   status: string;
+  // };
   journal: {
     name: string;
     pages: string;
@@ -30,7 +30,9 @@ export type paperErrorType = {
 export const fetchPaperByDOI = async (doi: string) => {
   const params = {
     fields:
-      "title,year,isOpenAccess,externalIds,url,openAccessPdf,journal,authors,venue",
+      // "title,year,isOpenAccess,externalIds,url,openAccessPdf,journal,authors,venue",
+      "title,year,externalIds,url,journal,authors,venue",
+
   };
 
   const urlSearchParams = new URLSearchParams(params).toString();

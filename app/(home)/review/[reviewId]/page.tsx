@@ -2,19 +2,20 @@ import React from 'react'
 import Review from '@/components/Review';
 import { fetchReview } from '@/actions/review.action';
 import { currentUser } from '@clerk/nextjs';
-import { CommentForm } from '@/components/CommentForm';
-import CommentList from '@/components/CommentList';
+import { CommentForm } from '@/components/review/CommentForm';
+import CommentList from '@/components/review/CommentList';
 
 const page = async(
   { params: { reviewId }} : { params : { reviewId: string } }
 ) => {
   const _user = await currentUser()
   if(!_user) return null
+  const clamp = false
 
   const reviewData = await fetchReview(reviewId)
   return (
     <div className='flex flex-col gap-5'>
-      <Review reviewData={reviewData}/>
+      <Review reviewData={reviewData} clamp={clamp}/>
       <CommentForm userId={_user.id} reviewId={reviewId} />
       <CommentList reviewId={reviewId}/>
     </div>

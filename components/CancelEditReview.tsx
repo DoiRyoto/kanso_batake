@@ -4,11 +4,15 @@ import React from 'react'
 import { Button } from './ui/button'
 import { useRouter } from 'next/navigation'
 
-const CancelCreateReview = () => {
+const CancelEditReview = ({
+    userId,
+}: {
+    userId: string;
+}) => {
   const router = useRouter()
 
   const clickHandler = () => {
-    router.push("/")
+    router.push(`/user/${userId}`)
   }
 
   return (
@@ -18,4 +22,4 @@ const CancelCreateReview = () => {
   )
 }
 
-export default CancelCreateReview
+export default CancelEditReview

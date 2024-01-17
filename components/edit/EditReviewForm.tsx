@@ -15,12 +15,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "../ui/textarea";
 import { setReview, updateReview } from "@/actions/review.action";
 import { paperData, reviewType } from "@/constants";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
-import CalcelCreateReview from "./CancelCreateReview";
+import CancelEditReview from "../CancelEditReview";
 import { fetchPaperByDOI, paperDetailsType, paperErrorType } from "@/actions/paper.action";
 import {
   Command,
@@ -62,28 +62,42 @@ export function ReviewForm({
   userName: string;
   review: reviewType;
 }) {
-  const tags = review.tags.toString()
+  const authors: Array<{ name: string; }> = [{ name: review.authors }]
 
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
-  const [paper, setPaper] = useState<paperDetailsType & paperErrorType>()
-  const [inputContents, setContents] = useState(review.contents)
-  const [inputTags, setTags] = useState(tags)
+  const [paper, setPaper] = useState<paperDetailsType & paperErrorType>({
+    title: review.paperTitle,
+    year: review.year,
+    externalIds: {
+      DOI: review.doi,
+    },
+    url: review.link,
+    journal: {
+      name: review.journal_name,
+      pages: review.journal_pages,
+      volume: review.journal_vol,
+    },
+    authors: authors,
+    venue: review.venue,
+    error: "",
+  }
+  )
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),// zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      ReviewContents: review.contents,
-      title: review.paperTitle,
-      Tags: tags,
+      ReviewContents: review.contents ? review.contents : "",
+      title: review.paperTitle ? review.paperTitle : "",
+      Tags: review.tags ? review.tags.toString() : "",
     },
   });
 
   // フォーム送信時の処理を定義
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     if(!paper || (paper && paper.error)){
-      alert("不正なDOIです")
+      alert("DOIが見つかりません\n手動入力に切り替えてください")
       return
     }
 
@@ -118,15 +132,12 @@ export function ReviewForm({
   const onChageHandler = useDebouncedCallback(async(e) => {
     const paperData = await fetchPaperByDOI(e.target.value)
     form.setValue("title", paperData.title)
-    console.log(paperData)
     setPaper(paperData)
   }, 300)
   const onChangeContentsHandler = async(e: { target: { value: string; }; }) => {
-    setContents(e.target.value)
     form.setValue("ReviewContents", e.target.value)
   }
   const onChangeTagsHandler = async(e: { target: { value: string; }; }) => {
-    setTags(e.target.value)
     form.setValue("Tags", e.target.value)
   }
   
@@ -214,7 +225,7 @@ export function ReviewForm({
         ) : (
           <div className="flex flex-row gap-3">
             <Button type="submit">Save</Button>
-            <CalcelCreateReview />
+            <CancelEditReview  userId={userId}/>
           </div>
         )}
       </form>

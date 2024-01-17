@@ -1,10 +1,11 @@
 import { fetchUser } from '@/actions/user.action'
-import { ReviewForm } from '@/components/EditReviewForm'
-import { ReviewFormManual } from '@/components/EditReviewFormManual'
+import { ReviewForm } from '@/components/edit/EditReviewForm'
+import { ReviewFormManual } from '@/components/edit/EditReviewFormManual'
 import { SwitchDemo } from '@/components/ReviewFormModeChangeSwitch'
 import { currentUser } from '@clerk/nextjs'
 import { fetchReview } from '@/actions/review.action'
 import React from 'react'
+import { redirect } from 'next/navigation'
 
 const page = async(
     { params: { reviewId }, searchParams } : { params : { reviewId: string }, searchParams: { mode?: string } }
@@ -14,9 +15,11 @@ const page = async(
   const userInfo = await fetchUser(user.id)
   const review = await fetchReview(reviewId)
 
+  if(userInfo.id !== review.createdBy) redirect("/")
+
   return (
     <div className="mt-7 w-full">
-      <SwitchDemo />
+      <SwitchDemo defaultChecked={searchParams.mode !== "manual"}/>
       { (searchParams.mode == "manual") ? 
       <ReviewFormManual userId={user.id} userName={userInfo.name} review={review}/>:
       <ReviewForm userId={user.id} userName={userInfo.name} review={review}/>}

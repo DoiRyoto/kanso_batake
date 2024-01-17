@@ -1,4 +1,4 @@
-import { OnboadingForm } from '@/components/OnboardingForm'
+import { OnboadingForm } from '@/components/auth/OnboardingForm'
 import { currentUser } from '@clerk/nextjs'
 import React from 'react'
 

@@ -14,11 +14,10 @@ import {
 } from "firebase/firestore";
 import db from "@/lib/firebase/store";
 import { reviewType } from "@/constants";
-import { revalidatePath, unstable_noStore } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function getAllReviews() {
-  unstable_noStore();
   const col = query(collection(db, "reviews"), orderBy("id", "desc"));
 
   let result: reviewType[] = [];

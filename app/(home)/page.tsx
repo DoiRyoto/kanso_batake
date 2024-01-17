@@ -1,6 +1,6 @@
 import Reviews from "@/components/Reviews"
 import { Suspense } from "react"
-import ReviewPostButton from "@/components/CreateReview"
+import ReviewPostButton from "@/components/top/CreateReview"
 import Search from "@/components/TagSearchBar"
 
 export default async function Home({

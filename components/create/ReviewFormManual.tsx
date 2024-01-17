@@ -4,7 +4,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+  } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,14 +21,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "./ui/textarea";
-import { setReview, updateReview } from "@/actions/review.action";
+import { Textarea } from "../ui/textarea";
+import { setReview } from "@/actions/review.action";
 import { reviewType } from "@/constants";
 import { useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
-import CalcelCreateReview from "./CancelCreateReview";
-
+import CancelCreateReview from "../CancelCreateReview";
 import { delEmpty_tag } from "@/lib/utils";
+import ReactMarkDown from "react-markdown";
 
 // フォームのバリデーションスキーマを定義
 const FormSchema = z.object({
@@ -66,44 +72,35 @@ const FormSchema = z.object({
 export function ReviewFormManual({
   userId,
   userName,
-  review,
 }: {
   userId: string;
   userName: string;
-  review: reviewType;
 }) {
-    console.log(typeof(review.year))
-  const tags = review.tags.toString()
-
   const isLoading = useRef(false);// ローディング状態を追跡するためのuseRef
-  const [inputTitle, setTitle] = useState(review.paperTitle)
-  const [inputContents, setContents] = useState(review.contents)
-  const [inputVenue, setVenue] = useState(review.venue)
-  const [inputYear, setYear] = useState(review.year)
-  const [inputJournal_name, setJournal_name] = useState(review.journal_name)
-  const [inputJournal_pages, setJournal_pages] = useState(review.journal_pages)
-  const [inputJournal_vol, setJournal_vol] = useState(review.journal_vol)
-  const [inputAuthors, setAuthors] = useState(review.authors)
-  const [inputDoi, setDoi] = useState(review.doi)
-  const [inputLink, setLink] = useState(review.link)
-  const [inputTags, setTags] = useState(tags)
+  const [isPreview, setPreview] = useState(false);
+  const bePreview = () => {
+    setPreview(true);
+  }
+  const beEdit = () => {
+    setPreview(false);
+  }
 
   // useFormフックを使ってフォームを初期化
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),// zodResolverを使ってバリデーションを設定
     defaultValues: {
       // フォームフィールドのデフォルト値を設定
-      PaperTitle: review.paperTitle,
-      ReviewContents: review.contents,
-      venue: review.venue,
-      year: review.year,
-      journal_name: review.journal_name,
-      journal_pages: review.journal_pages,
-      journal_vol: review.journal_vol,
-      authors: review.authors,
-      doi: review.doi,
-      link: review.link,
-      Tags: tags,
+      PaperTitle: "",
+      ReviewContents: "",
+      venue: "",
+      year: "",
+      journal_name: "",
+      journal_pages: "",
+      journal_vol: "",
+      authors: "",
+      doi: "",
+      link: "",
+      Tags: "",
     },
   });
 
@@ -113,7 +110,7 @@ export function ReviewFormManual({
 
     // 提出用のレビューデータを準備
     const reviewData: reviewType = {
-      id: review.id,
+      id: Date.now().toString(),// レビューIDを現在のタイムスタンプで生成
       contents: data.ReviewContents,
       paperTitle: data.PaperTitle,
       venue: data.venue,
@@ -131,55 +128,10 @@ export function ReviewFormManual({
 
     try {
       // レビューデータの送信を試みる
-      await updateReview(userId, reviewData);
+      await setReview(userId, reviewData);
     } catch (error) {
       console.log(error);
     }
-  }
-
-  const onChangeTitleHandler = async(e: { target: { value: string; }; }) => {
-    setTitle(e.target.value)
-    form.setValue("PaperTitle", e.target.value)
-  }
-  const onChangeContentsHandler = async(e: { target: { value: string; }; }) => {
-    setContents(e.target.value)
-    form.setValue("ReviewContents", e.target.value)
-  }
-  const onChangeVenueHandler = async(e: { target: { value: string; }; }) => {
-    setVenue(e.target.value)
-    form.setValue("venue", e.target.value)
-  }
-  const onChangeYearHandler = async(e: { target: { value: string; }; }) => {
-    setYear(e.target.value)
-    form.setValue("year", e.target.value)
-  }
-  const onChangeJnameHandler = async(e: { target: { value: string; }; }) => {
-    setJournal_name(e.target.value)
-    form.setValue("journal_name", e.target.value)
-  }
-  const onChangeJpageHandler = async(e: { target: { value: string; }; }) => {
-    setJournal_pages(e.target.value)
-    form.setValue("journal_pages", e.target.value)
-  }
-  const onChangeJvolHandler = async(e: { target: { value: string; }; }) => {
-    setJournal_vol(e.target.value)
-    form.setValue("journal_vol", e.target.value)
-  }
-  const onChangeAuthorsHandler = async(e: { target: { value: string; }; }) => {
-    setAuthors(e.target.value)
-    form.setValue("authors", e.target.value)
-  }
-  const onChangeDoiHandler = async(e: { target: { value: string; }; }) => {
-    setDoi(e.target.value)
-    form.setValue("doi", e.target.value)
-  }
-  const onChangeLinkHandler = async(e: { target: { value: string; }; }) => {
-    setLink(e.target.value)
-    form.setValue("link", e.target.value)
-  }
-  const onChangeTagsHandler = async(e: { target: { value: string; }; }) => {
-    setTags(e.target.value)
-    form.setValue("Tags", e.target.value)
   }
 
   // フォームのレンダリングを行う
@@ -198,8 +150,6 @@ export function ReviewFormManual({
                 <Input
                   placeholder="論文のタイトルを入力してください。"
                   {...field}
-                //   value={inputTitle}
-                  onChange={onChangeTitleHandler}
                 />
               </FormControl>
               <FormMessage />
@@ -215,9 +165,7 @@ export function ReviewFormManual({
               <FormLabel className="flex flex-row gap-1">
                 著者名<p className="text-red-600">*</p></FormLabel>
               <FormControl>
-                <Input placeholder="著者名を入力してください。"
-                {...field}
-                onChange={onChangeAuthorsHandler}/>
+                <Input placeholder="著者名を入力してください。" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -234,7 +182,6 @@ export function ReviewFormManual({
                 <Input
                   placeholder="発表された年を入力してください。"
                   {...field}
-                  onChange={onChangeYearHandler}
                 />
               </FormControl>
               <FormMessage />
@@ -242,25 +189,55 @@ export function ReviewFormManual({
           )}
         />
 
+    <Button
+        type="button"
+        onClick={beEdit}
+        className={`
+            ${!isPreview ? "bg-white border border-gray-300 hover:bg-white  text-gray-800" : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"}
+            px-4 py-2 rounded-none rounded-l-md text-[2px] w-fit
+        `}>
+        Edit
+        </Button>
+        <Button
+        type="button"
+        onClick={bePreview}
+        className={`
+            ${isPreview ? "bg-white border border-gray-300 hover:bg-white text-gray-800" : "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:border-gray-400 focus:ring focus:ring-gray-200"}
+            px-4 py-2 rounded-none rounded-r-md text-[2px] w-fit
+        `}>
+        Preview
+        </Button>
+        
+
+        {!isPreview ? 
         <FormField
-          control={form.control}
-          name="ReviewContents"
-          render={({ field }) => (
+            control={form.control}
+            name="ReviewContents"
+            render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex flex-row gap-1">レビュー<p className="text-red-600">*</p></FormLabel>
-              <FormControl>
+                <FormLabel className="flex flex-row gap-1">レビュー<p className="text-red-600">*</p></FormLabel>
+                <FormControl>
                 <Textarea
-                  placeholder="論文のレビューを入力してください。"
-                  id="message"
-                  rows={10}
-                  {...field}
-                  onChange={onChangeContentsHandler}
+                    placeholder="論文のレビューを入力してください。"
+                    id="message"
+                    rows={10}
+                    {...field}
                 />
-              </FormControl>
-              <FormMessage />
+                </FormControl>
+                <FormMessage />
             </FormItem>
-          )}
+            )}
         />
+        :
+        <>
+        <p className="text-sm font-medium">プレビュー</p>
+        <Card>
+        <CardContent className="markdown">
+            <ReactMarkDown>{form.getValues("ReviewContents")}</ReactMarkDown>
+        </CardContent>
+        </Card>
+        </>
+        }
 
         <FormField
           control={form.control}
@@ -269,10 +246,7 @@ export function ReviewFormManual({
             <FormItem>
               <FormLabel>学術会議の名前</FormLabel>
               <FormControl>
-                <Input placeholder="会議名を入力してください。"
-                  {...field}
-                  onChange={onChangeVenueHandler}
-                 />
+                <Input placeholder="会議名を入力してください。" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -286,10 +260,7 @@ export function ReviewFormManual({
             <FormItem>
               <FormLabel>雑誌名</FormLabel>
               <FormControl>
-                <Input placeholder="雑誌名を入力してください。"
-                  {...field}
-                  onChange={onChangeJnameHandler}
-                 />
+                <Input placeholder="雑誌名を入力してください。" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -306,7 +277,6 @@ export function ReviewFormManual({
                 <Input
                   placeholder="雑誌でのページを入力してください。"
                   {...field}
-                  onChange={onChangeJpageHandler}
                 />
               </FormControl>
               <FormMessage />
@@ -324,7 +294,6 @@ export function ReviewFormManual({
                 <Input
                   placeholder="雑誌での巻数を入力してください。"
                   {...field}
-                  onChange={onChangeJvolHandler}
                 />
               </FormControl>
               <FormMessage />
@@ -339,10 +308,7 @@ export function ReviewFormManual({
             <FormItem>
               <FormLabel>DOI</FormLabel>
               <FormControl>
-                <Input placeholder="DOIを入力してください。"
-                  {...field}
-                  onChange={onChangeDoiHandler}
-                />
+                <Input placeholder="DOIを入力してください。" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -356,10 +322,7 @@ export function ReviewFormManual({
             <FormItem>
               <FormLabel>URL</FormLabel>
               <FormControl>
-                <Input placeholder="URLを入力してください。"
-                  {...field}
-                  onChange={onChangeLinkHandler}
-                />
+                <Input placeholder="URLを入力してください。" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -373,10 +336,7 @@ export function ReviewFormManual({
             <FormItem>
               <FormLabel>タグ(半角カンマ区切りで入力)</FormLabel>
               <FormControl>
-                <Input placeholder="タグを入力してください。"
-                  {...field}
-                  onChange={onChangeTagsHandler}
-                />
+                <Input placeholder="タグを入力してください。" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -390,8 +350,8 @@ export function ReviewFormManual({
           </Button>
         ) : (
           <div className="flex flex-row gap-3">
-            <Button type="submit">Save</Button>
-            <CalcelCreateReview />
+            <Button type="submit">Submit</Button>
+            <CancelCreateReview />
           </div>
         )}
       </form>

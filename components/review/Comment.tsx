@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 import { commentType } from "@/constants";
 import { fetchUser } from "@/actions/user.action";
 

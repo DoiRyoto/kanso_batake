@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 import { labType } from "@/constants";
 
 const LabCard = ({ labData }: { labData: labType }) => {

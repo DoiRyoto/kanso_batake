@@ -38,9 +38,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../ui/select";
 import { useRouter } from "next/navigation";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea } from "../ui/scroll-area";
 
 const FormSchema = z.object({
   username: z.string().min(1, {
