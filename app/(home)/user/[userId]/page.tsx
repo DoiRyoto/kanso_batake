@@ -1,5 +1,5 @@
-import ReviewHeader from '@/components/ReviewerHeader'
-import ReviewsByUser from '@/components/ReviewsByUser'
+import ReviewHeader from '@/components/user/ReviewerHeader'
+import ReviewsByUser from '@/components/user/ReviewsByUser'
 import React from 'react'
 import Search from '@/components/TagSearchBar';
 

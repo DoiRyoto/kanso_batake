@@ -17,7 +17,7 @@ const LabCard = ({ labData }: { labData: labType }) => {
     <Card>
       <CardHeader>
         <CardTitle className="truncate leading-normal">
-            <Link  href={`/lab/${labData.value}`}>
+            <Link  href={`/lab/${labData.value}`} className="flex text-blue-600 hover:text-blue-400 underline">
             {labData.value}
             </Link>
         </CardTitle>

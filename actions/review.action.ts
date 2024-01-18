@@ -16,6 +16,9 @@ import db from "@/lib/firebase/store";
 import { reviewType } from "@/constants";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { storage } from "@/lib/firebase/storage";
+import { ref } from "firebase/storage";
+import { deleteImage } from "./image.action";
 
 export async function getAllReviews() {
   const col = query(collection(db, "reviews"), orderBy("id", "desc"));
@@ -63,8 +66,9 @@ export async function updateReview(userId: string, reviewData: reviewType) {
   redirect(`/user/${userId}`);
 }
 
-export async function deleteReview(reviewData: reviewType,userId?: string) {
+export async function deleteReview(reviewData: reviewType, userId?: string) {
   await Promise.all([
+    deleteImage(reviewData.id),
     deleteDoc(doc(db, `reviews/${reviewData.id}`)),
     deleteDoc(doc(db, `users/${userId}/reviews/${reviewData.id}`)),
   ]);

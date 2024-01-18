@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactMarkDown from "react-markdown";
+import remarkBreaks from "remark-breaks";
 import {
   Card,
   CardContent,
@@ -31,33 +32,27 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { FaRegEdit } from "react-icons/fa";
 import icon from "@/public/icon.png";
 import { deleteReview } from "@/actions/review.action";
+import { Modal } from "./review/Modal";
+import clsx from "clsx";
 
 const Review = ({
   reviewData,
   userId,
-  clamp,
+  clamp
 }: {
   reviewData: reviewType;
   userId?: string;
-  clamp: boolean;
+  clamp?: boolean
 }) => {
   const deleteButton_clickHandler = async () => {
     await deleteReview(reviewData, userId);
-  };
-
-  const [isClamp, setIsClamp] = useState<boolean>(true);
-  const onClickClampHandler = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // ページの上部への移動をキャンセル
-    e.preventDefault();
-    // リンクがクリックされたときに「すべて読む」の表示を切り替え
-    setIsClamp(!isClamp);
   };
 
   return (
     <Card>
       <CardHeader>
         <Link href={`/review/${reviewData.id}`}>
-          <CardTitle className="truncate leading-normal hover:">
+          <CardTitle className="truncate leading-normal text-blue-600 hover:text-blue-400 hover:underline">
             {reviewData.paperTitle}
           </CardTitle>
         </Link>
@@ -71,12 +66,20 @@ const Review = ({
         {(reviewData.doi || reviewData.link) && (
           <div className="flex flex-row gap-2 py-3">
             {reviewData.doi && (
-              <a href={`https://www.doi.org/${reviewData.doi}`} target="_blank">
+              <a
+                href={`https://www.doi.org/${reviewData.doi}`}
+                target="_blank"
+                className="transform hover:scale-110 motion-reduce:transform-none"
+              >
                 <SiDoi size="2rem" />
               </a>
             )}
             {reviewData.link && (
-              <a href={`${reviewData.link}`} target="_blank">
+              <a
+                href={`${reviewData.link}`}
+                target="_blank"
+                className="transform hover:scale-110 motion-reduce:transform-none"
+              >
                 <IoIosPaper size="2rem" />
               </a>
             )}
@@ -128,7 +131,8 @@ const Review = ({
           {reviewData.tags
             ? reviewData.tags.map((tag) => {
                 return (
-                  <Link key={tag}
+                  <Link
+                    key={tag}
                     href={`?tag=${tag}`}
                     className="text-blue-400 hover:text-blue-600"
                   >
@@ -154,32 +158,24 @@ const Review = ({
           {reviewData.reviewerName}
         </Link>
       </CardContent>
-      {clamp
-        ? isClamp
-          ? <>
-              <CardContent className="markdown">
-                <ReactMarkDown className="line-clamp-4">{reviewData.contents}</ReactMarkDown>
-              </CardContent>
-              <CardContent>
-              <Link href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
-                すべて読む
-              </Link>
-              </CardContent>
-            </>
-          : <>
-              <CardContent className="markdown">
-                <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
-              </CardContent>
-              <CardContent>
-              <Link href="#" onClick={onClickClampHandler} className="flex text-blue-400 hover:text-blue-600 underline gap-2">
-                一部を表示
-              </Link>
-              </CardContent>
-            </>
-        : <CardContent className="markdown">
-            <ReactMarkDown className="">{reviewData.contents}</ReactMarkDown>
-          </CardContent>
-      }
+      {reviewData.imageUrl && (
+        <CardContent>
+          <Modal imageUrl={reviewData.imageUrl} />
+        </CardContent>
+      )}
+      <CardContent className="markdown" >
+        <ReactMarkDown
+          className={clsx(clamp ? "line-clamp-4" : "")}
+          remarkPlugins={[remarkBreaks]}
+          components={{
+            p: ({ children }) => (
+              <p style={{ marginBottom: "1em" }}>{children}</p>
+            ),
+          }}
+        >
+          {reviewData.contents}
+        </ReactMarkDown>
+      </CardContent>
     </Card>
   );
 };
