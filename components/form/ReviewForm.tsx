@@ -426,7 +426,7 @@ export function ReviewForm({
               </CardContent>
             )}
             <CardContent className="markdown">
-              <ReactMarkDown className="line-clamp-4">
+              <ReactMarkDown>
                 {form.getValues("ReviewContents")}
               </ReactMarkDown>
             </CardContent>
