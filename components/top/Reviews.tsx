@@ -1,9 +1,9 @@
-import { fetchReviewsByFilter } from "@/actions/review.action";
+import { fetchReviewsByFields, fetchReviewsByFilter } from "@/actions/review.action";
 import React from "react";
 import Review from "../Review";
 
-const Reviews = async ({ tag }: { tag?: string }) => {
-  const reviewsData = await fetchReviewsByFilter(tag);
+const Reviews = async ({ fields, tag }: { fields?: string[], tag?: string }) => {
+  const reviewsData = tag ? await fetchReviewsByFilter(tag):await fetchReviewsByFields(fields);
 
   return (
     <>
